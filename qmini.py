@@ -99,7 +99,7 @@ class ImageTask:
 
     @staticmethod
     def make_default(image_path: str, min_factor: float = 0.8) -> 'ImageTask':
-        search_rect = Rect(0, 0, pyautogui.size().width, pyautogui.size().height)
+        search_rect = Rect(0, 0, Screen.WIDTH, Screen.HEIGHT)
         return ImageTask(image_path, min_factor, search_rect)
 
 # ========== Screen 类 ==========
