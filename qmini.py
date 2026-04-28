@@ -11,7 +11,7 @@ import os
 import pyautogui
 import cv2
 import numpy as np
-from typing import List,Optional
+from typing import List, Optional
 
 __all__= [
     'Point',
@@ -57,10 +57,14 @@ class Rect:
 
     __repr__ = __str__
 
+    @staticmethod
+    def get_screen_rect() -> 'Rect':
+        return Rect(0, 0, Screen.WIDTH, Screen.HEIGHT)
+
 # ========== 'ImageTask' 类 ==========
 class ImageTask:
     """图像查找任务:包含图像|相似度|屏幕查找区域"""
-    def __init__(self, image_path: str, min_factor: float, search_rect: 'Rect'):
+    def __init__(self, image_path: str, min_factor: float = 0.8, search_rect: Optional['Rect'] = None):
         if not os.path.exists(image_path):
             raise ValueError(f"图像路径不存在: {image_path}")
 
@@ -74,7 +78,10 @@ class ImageTask:
 
         self.min_factor = min_factor
 
-        self.search_rect = search_rect
+        if search_rect is None:
+            self.search_rect = Rect.get_screen_rect()
+        else:
+            self.search_rect = search_rect
 
         template = cv2.imread(self.image_path, cv2.IMREAD_COLOR)
         if template is None:
@@ -96,11 +103,6 @@ class ImageTask:
                 f"search_rect:{self.search_rect}}}")
 
     __repr__ = __str__
-
-    @staticmethod
-    def make_default(image_path: str, min_factor: float = 0.8) -> 'ImageTask':
-        search_rect = Rect(0, 0, Screen.WIDTH, Screen.HEIGHT)
-        return ImageTask(image_path, min_factor, search_rect)
 
 # ========== Screen 类 ==========
 class Execute:
